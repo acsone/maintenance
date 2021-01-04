@@ -55,15 +55,15 @@ class MaintenanceEquipment(models.Model):
         return True
 
     def preview_child_list(self):
+        context = self.env.context.copy()
         return {
             'name': 'Child equipment of %s' % self.name,
             'type': 'ir.actions.act_window',
             'res_model': 'maintenance.equipment',
             'res_id': self.id,
             'view_mode': 'list,form',
-            'context': {
-                **self.env.context,
+            'context': context.update({
                 'default_parent_id': self.id,
-                'parent_id_editable': False},
+                'parent_id_editable': False}),
             'domain': [('id', 'in', self.child_ids.ids)],
         }
