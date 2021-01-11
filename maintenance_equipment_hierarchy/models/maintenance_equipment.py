@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright 2019 Eficent Business and IT Consulting Services S.L.
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
@@ -56,14 +57,16 @@ class MaintenanceEquipment(models.Model):
 
     def preview_child_list(self):
         context = self.env.context.copy()
+        context.update({
+            'default_parent_id': self.id,
+            'parent_id_editable': False,
+        })
         return {
             'name': 'Child equipment of %s' % self.name,
             'type': 'ir.actions.act_window',
             'res_model': 'maintenance.equipment',
             'res_id': self.id,
             'view_mode': 'list,form',
-            'context': context.update({
-                'default_parent_id': self.id,
-                'parent_id_editable': False}),
+            'context': context,
             'domain': [('id', 'in', self.child_ids.ids)],
         }
